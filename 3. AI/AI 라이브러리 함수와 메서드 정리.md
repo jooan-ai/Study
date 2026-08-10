@@ -451,12 +451,13 @@ PyTorch의 기본 데이터 구조인 텐서(Tensor)를 생성하고 가공합�
 딥러닝 모델 레이어를 구성하는 핵심 클래스입니다.
 
 * **`nn.Module`**: 모든 신경망 모델의 기본 클래스 (`__init__`에서 레이어 정의, `forward()`에서 순전파 정의)
-* **`nn.Sequential(*args)`**: 레이어를 순차적으로 엮어 직관적으로 신경망 구성
-* **`nn.Linear(in_features, out_features)`**: 전결합층(Fully-Connected Layer / Linear Layer) 생성
+* **<u>`nn.Sequential(*args)`**: 레이어를 순차적으로 엮어 직관적으로 신경망 구성
+* **`nn.Linear(in_features, out_features)`**: 입력 데이터를 기반으로 기본적인 선형 방정식 생성 / in_features - 입력 변수의 개수 / out_features - 출력 변수의 개수 </u>
 * **`nn.Conv2d(in_channels, out_channels, kernel_size)`**: 2차원 합성곱(Convolutional) 레이어 (이미지 처리)
 * **`nn.MaxPool2d(kernel_size)` / `nn.AvgPool2d(kernel_size)`**: 2차원 풀링 레이어
 * **`nn.Dropout(p=0.5)`**: 과적합 방지를 위한 드롭아웃 레이어
 * **`nn.BatchNorm2d(num_features)`**: 배치 정규화(Batch Normalization) 레이어
+* **<u>`nn.Sigmoid()`**: 출력값을 0~1 사이로 제한 / 합격, 불합격의 확률을 계산 가능 </u>
 * **`nn.ReLU()` / `nn.Sigmoid()` / `nn.Softmax(dim=1)`**: 활성화 함수(Activation Functions)
 
 ---
@@ -465,7 +466,7 @@ PyTorch의 기본 데이터 구조인 텐서(Tensor)를 생성하고 가공합�
 
 모델의 예측값과 실제 정답 사이의 오차를 측정합니다.
 
-* **`nn.MSELoss()`**: 회귀(Regression)용 평균 제곱 오차 손실 함수
+* **<u>`nn.MSELoss()`**: MSE 구하기 </u>
 * **`nn.CrossEntropyLoss()`**: 다중 클래스 분류(Classification)용 손실 함수 (Softmax 내장)
 * **`nn.BCEWithLogitsLoss()`**: 이진 분류(Binary Classification)용 손실 함수 (Sigmoid 내장)
 
@@ -475,10 +476,10 @@ PyTorch의 기본 데이터 구조인 텐서(Tensor)를 생성하고 가공합�
 
 역전파를 통해 구한 경사(Gradient)로 모델 파라미터(가중치)를 업데이트합니다.
 
-* **`optim.SGD(model.parameters(), lr=0.01)`**: 확률적 경사 하강법 최적화
-* **`optim.Adam(model.parameters(), lr=0.001)`**: 모멘텀과 RMSProp을 결합한 보편적 최적화 알고리즘
+* **<u>`optim.SGD(model.parameters(), lr=0.01)`**: 확률적 경사 하강법(GD) 최적화 / model.parameters() - `nn.Linear`에서 만든 함수의 학습 가능한 모든 파라미터를 사용하여 업데이트
+* **`optim.Adam(model.parameters(), lr=0.001)`**: Adam 최적화</u>
 * **`optim.AdamW(model.parameters(), lr=0.001)`**: Adam에 가중치 감쇠(Weight Decay)를 정확히 적용한 변형 (LLM/트랜스포머에 자주 사용)
-* **`optimizer.zero_grad()`**: 이전 단계에서 누적된 파라미터의 경사도(Gradient) 초기화
+* **<u>`optimizer.zero_grad()`**: 이전 단계에서 누적된 파라미터의 경사도(Gradient) 초기화</u>
 * **`optimizer.step()`**: 계산된 경사도를 기반으로 모델 파라미터 업데이트
 
 ---
@@ -487,8 +488,8 @@ PyTorch의 기본 데이터 구조인 텐서(Tensor)를 생성하고 가공합�
 
 모델 학습 및 평가의 루프 과정 제어 도구입니다.
 
-* **`loss.backward()`**: 손실(Loss)에 대한 모델 파라미터의 경사도 자동 계산 (역전파)
-* **`torch.no_grad()`**: 경사도 계산을 비활성화하는 컨텍스트 매니저 (평가/인퍼런스 시 메모리 및 속도 최적화)
+* **<u style="text-decoration: underline red 2px;">`.backward()`**: 미분 계산(함수의 경사도 계산) </u>
+* **<u>`torch.no_grad()`**: 미분 추적 OFF - 자원 절약, 중간 평가나 최종 평가 때 
 * **`model.train()`**: 모델을 학습 모드로 전환 (Dropout, BatchNorm 등의 동작 활성화)
 * **`model.eval()`**: 모델을 평가 모드로 전환 (Dropout, BatchNorm 등의 동작 고정)
 * **`torch.save(model.state_dict(), 'path.pth')`**: 모델의 가중치(파라미터) 저장
