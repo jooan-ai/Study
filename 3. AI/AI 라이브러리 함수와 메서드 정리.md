@@ -5,20 +5,22 @@
 
 ## 1. 배열 생성 및 초기화 (Array Creation & Initialization)
 
-* **<u>`np.array(object)`**: 파이썬 리스트/튜플 등을 NumPy 배열(`ndarray`)로 변환
+* **<u>`np.array(object)`**: 파이썬 리스트/튜플 등의 object을 NumPy 배열(`ndarray`)로 변환
 * **`np.zeros(shape)`**: 모든 원소가 0인 배열 생성
-* **`np.ones(shape)`**: 모든 원소가 1인 배열 생성
+* **`np.ones(shape)` / `np.ones_like(A, dtype)`**: 모든 원소가 1인 배열 생성 / 다른 배열 A의 크기 형태를 따라서 1로 채워진 배열 생성 
 * **`np.full(shape, fill_value)`**: 지정한 특정 값으로 채워진 배열 생성
 * **`np.arange([start,] stop[, step])`**: 지정한 범위와 간격의 연속된 숫자 배열 생성
-* **`np.linspace(start, stop, num)`**: 지정한 범위 내에서 균등한 간격의 $N$개 숫자 배열 생성
-* **`np.eye(N)`**: $N \times N$ 크기의 단위 행렬(Identity Matrix) 생성</u>
+* **`np.linspace(start, stop, num)`**: 지정한 범위 내에서 균등한 간격의 num개 숫자 배열 생성
+* **`np.eye(N)`**: $N \times N$ 크기의 단위 행렬(우하향 대각선만 1이고 나머지는 0) 생성
+* **`.size` / `.ndim` / `.shape`**: 원소의 수 / 차원값 / 행렬 확인</u>
 
 ---
 
 ## 2. 배열 형태 및 구조 변환 (Reshaping & Manipulation)
 
 * **<u>`np.reshape(a, newshape)`**: 원소 수 유지하며 지정한 차원/모양으로 변경 / 인자가 -1이면 자동 계산을 의미
-* **`ndarray.T`**: 행과 열(축) 위치를 바꿈 (전치 행렬)
+* **`np.triu(object)`**: 해당 행렬을 위쪽 삼각형 부분만 만기고 0으로 변환
+* **`.T`**: 행과 열(축) 위치를 바꿈 (전치 행렬)
 * **`np.newaxis`**: 새로운 축(차원)을 추가함</u>
 * **`np.concatenate((a1, a2, ...), axis=0)`**: 지정한 축 기준으로 여러 배열 결합
 * **`np.vstack(tup)` / `np.hstack(tup)`**: 수직(행) 또는 수평(열) 방향으로 배열 쌓기
@@ -67,7 +69,7 @@
 * **<u>`np.random.randint(low, high, size)`**: 지정 범위 내 정수 난수 배열 생성
 * **`np.random.choice(a, size, replace)`**: 주어진 배열에서 무작위 샘플 추출</u>
 * **`np.random.shuffle(x)` / `np.random.permutation(x)`**: 원소 순서를 무작위로 섞음 (`shuffle`은 원본 직접 변경, `permutation`은 새 배열 반환)
-* **<u>`np.random.seed(seed)`**: 난수 생성 시드 고정 (실험 재현성 확보)</u>
+* **<u>`np.random.seed(seed)`**: 난수 생성 시드 고정 (실험 재현성 확보) - seed 값을 바꾸면 새로운 난수 생성</u>
 
 
 ---
@@ -94,7 +96,7 @@
 * **<u>`df.head(n)` / `df.tail(n)`**: 상위 / 하위 `n`개 행 확인 (기본값 5)
 * **`df.sample(n)`**: 무작위로 `n`개 행 샘플링
 * **`df.info()`**: 데이터프레임의 행/열 개수, 컬럼명, 데이터 타입, 결측치 수 요약 출력
-* **`df.describe()`**: 수치형 컬럼의 기술통계량(개수, 평균, 표준편차, 사분위수 등) 계산 
+* **<u>`df.describe()`**: 수치형 컬럼의 기술통계량(개수, 평균, 표준편차, 사분위수 등) 계산</u> 
 * **`df.dtypes`**: 각 컬럼의 데이터 타입 반환 (속성)
 * **`df.shape`**: 행과 열의 크기를 튜플 `(rows, cols)` 형태로 반환 (속성)
 * **`df.columns` / `df.index`**: 컬럼명 목록 / 행 인덱스 정보 반환 (속성)
@@ -123,7 +125,7 @@
 
 * **`df.isna()` / `df.isnull()`**: 결측치(NaN) 여부를 Bool 마스크로 반환
 * **`df.notna()`**: 결측치가 아닌 정상 데이터 여부를 Bool 마스크로 반환
-* **<u>`df.dropna(axis=0, how='any')`**: 결측치가 포함된 행/열 삭제</u>
+* **<u>`df.dropna(axis=0, subset='col', how='')`**: 결측치가 포함된 행/열 삭제 / subset='col' - 'col'에 해당하는 칼럼만 검사 / how='' - 여러 칼럼을 동시에 검사할 때 사용, 'any'라면 칼럼 중 하나라도 빈 값이면 삭제, 'all'이면 모든 칼럼이 빈 값이어야 삭제</u>
 * **`df.fillna(value)`**: 결측치를 특정 값 또는 지정된 방식(앞/뒤 값 채우기)으로 대체
 * **`df.duplicated()`**: 중복된 행 여부를 Bool 마스크로 반환
 * **`df.drop_duplicates()`**: 중복된 행 제거
@@ -138,7 +140,8 @@
 * **`s.apply(func)` / `df.apply(func, axis=0)`**: 행/열 또는 시리즈에 사용자 정의 함수 적용
 * **`s.map(dict_or_func)`**: 시리즈의 각 요소에 딕셔너리 매핑 또는 함수 적용
 * **`df.map(func)`**: 데이터프레임 전체의 모든 원소에 함수 적용 (Pandas 2.1+ / 구 `applymap`)
-* **<u>`df.drop(labels', axis=1)`**: 지정한 행 또는 열 삭제</u>
+* **<u>`df.drop(labels', axis=1)`**: 지정한 행 또는 열 삭제
+* **`df.corr(numeric_only=True)`**: 칼럼들 간의 상관계수를 계산 / numeric_only=True - 문자열 등은 제외하고 숫자로 이루어진 칼럼들만 선택 / 상관계수 - 각 칼럼 간에 얼마나 밀첩한 상관관계가 있는지 -1부터 1까지의 수로 나타낸 것, 히트맵 그릴 때 자주 사용</u>
 * **`df.sort_values(by='col', ascending=True)`**: 특정 컬럼 기준 값 정렬
 * **`df.sort_index()`**: 인덱스 기준으로 정렬
 * **`df.set_index('col')`**: 특정 컬럼을 행 인덱스로 지정
@@ -174,6 +177,7 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 * **`s.shift(periods=1)`**: 데이터를 지정한 기간만큼 위/아래로 이동 (시차 변수 생성)
 * **`s.pct_change()`**: 이전 항목 대비 변화율(증감률) 계산
 * **`s.rolling(window=n)`**: 이동평균 등 구간 단위의 슬라이딩 윈도우 연산 수행
+
 
 ---
 ---
@@ -212,7 +216,7 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 단일 변수 또는 두 변수 간의 데이터 분포 및 밀도를 시각화합니다.
 
 * **`sns.displot(data, x, kind='hist'|'kde'|'ecdf')`**: 분포 그래프 통합 생성 함수
-* **`sns.histplot(data, x, kde=True, bins=...)`**: 히스토그램 생성 (밀도추정선 `kde=True` 옵션 지원)
+* **<u>`sns.histplot(data, x, kde=True, bins=(n), color= ...)`**: 히스토그램(막대 그래프) 생성 / kde=True - 밀도 추정선(선그래프) 표시  / bins=(n) - 전체 범위를 n개의 구간(막대)로 나누어 집계 </u>
 * **`sns.kdeplot(data, x, fill=True)`**: 커널 밀도 추정(Kernel Density Estimation) 곡선 시각화
 * **`sns.ecdfplot(data, x)`**: 누적 분포 함수(ECDF) 곡선 시각화
 * **`sns.rugplot(data, x)`**: 축 상에 개별 데이터 위치를 작은 틱(선)으로 표시
@@ -223,7 +227,7 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 
 변수 간 선형 관계 및 회귀 모델 추정선을 시각화합니다.
 
-* **<u>`sns.regplot(data, x, y, ci=95)`**: 산점도와 함께 선형 회귀선 및 신뢰구간(Confidence Interval) 작성</u>
+* **<u>`sns.regplot(data, x, y, ci=95)`**: 산점도와 함께 선형 회귀선 및 신뢰구간(ci) 작성</u>
 * **`sns.lmplot(data, x, y, hue=..., col=..., row=...)`**: `regplot`과 `FacetGrid`를 결합하여 범주별 회귀선 다중 서브플롯 시각화
 * **`sns.residplot(data, x, y)`**: 회귀 모델 잔차(Residuals) 분포 그래프 시각화
 
@@ -233,10 +237,10 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 
 데이터프레임 전체 또는 여러 변수 간의 관계/상관관계를 다중 패널 형태로 시각화합니다.
 
-* **`sns.heatmap(data, annot=True, cmap='coolwarm', fmt='.2f')`**: 2차원 행렬(상관계수 등) 데이터의 히트맵 시각화
+* **<u>`sns.heatmap(data, mask=mask, annot=True, cmap='coolwarm', fmt='.(n)f', linewidths=(n))`**: 2차원 행렬(상관계수 등) 데이터의 히트맵 시각화 / mask=mask - 앞의 mask는 매개변수 이름으로 True인 부분을 빈칸으로 놔두고 False인 부분만 매개변수와 색상으로 채움, 뒤의 mask는 True, False로 구성된 배열  / annot=True - 각 칸에 숫자들을 직접 표기할지 여부 / cmap='coolwarm' - 색산 테마 /  </u>
 * **`sns.clustermap(data, cmap=...)`**: 계층적 클러스터링(Hierarchical Clustering)을 수행한 히트맵 및 덴드로그램 시각화
-* **`sns.pairplot(data, hue=..., corner=True)`**: 데이터프레임 내 모든 수치형 변수 간의 쌍별(Pairwise) 관계 그래프 격자 작성
-* **`sns.jointplot(data, x, y, kind='scatter'|'kde'|'hex'|'reg')`**: 두 변수의 관계 그래프와 각 변수의 단변량 분포 그래프를 축 가장자리에 결합하여 시각화
+* **<u>`sns.pairplot(data, corner=True, kind="reg")`**: 각 칼럼 간의 관계를 모두 그래프화 해서 보여줌 / corner=True - 대각선 아래만 보여줌(mask와 같은 원리) / kind="reg" - 산점도 위에 선형 회귀선을 그어줌 </u>
+* **`sns.jointplot(data, x, y, kind='scatter'|'kde'|'hex'|'reg')`**: 두 변수의 관계 그래프와 각 변수의 단변량 분포 그래프를 축 가장자리에 결합하여 시각화 / fmt='.(n)f' - 소숫점 n 번째 자리까지 표시, "d"를 넣으면 정수만 표시 / linewidths=(n) - 칸 사이에 n 픽셀 두께의 하얀 구분선을 넣음 
 
 ---
 
@@ -248,9 +252,9 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 * **`sns.color_palette()`**: 현재 또는 지정한 팔레트의 RGB 색상 리스트 반환 / 확인
 * **<u>`sns.load_dataset('dataset_name')`**: Seaborn 온라인 예제 데이터셋(예: `'iris'`, `'titanic'`, `'tips'`) 불러오기</u>
 
----
----
 
+---
+---
 
 
 # Matplotlib 주요 메서드 및 함수 정리
@@ -258,7 +262,7 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 
 ## 1. 캔버스 및 서브플롯 생성 (Figure & Axes Creation)
 
-* **`plt.figure(figsize=(w, h), dpi=...)`**: 새로운 차트 캔버스(Figure) 객체 생성 및 크기/해상도 지정
+* **<u>`plt.figure(figsize=(w, h), dpi=...)`**: 앞으로 그리려는 그래프의 크기/해상도 지정 - w, h 값</u>
 * **`plt.subplots(nrows, ncols)`**: 여러 개의 그래프(Axes)를 격자 형태로 동시에 생성 (Figure와 Axes 배열 반환)
 * **`plt.subplot(nrows, ncols, index)`**: 격자 영역 중 특정 위치의 단일 서브플롯 지정
 * **`fig.add_subplot()`**: Figure 객체에 새로운 서브플롯 추가
@@ -268,8 +272,8 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 
 ## 2. 기본 차트 유형별 그리기 (Basic Plotting)
 
-* **<u>`plt.plot(x, y, color=..., linestyle=..., marker=...)`**: 선 그래프(Line Plot) 작성</u>
-* **`plt.scatter(x, y, s=..., c=..., alpha=...)`**: 산점도(Scatter Plot) 작성 (점 크기 및 색상 지정 가능)
+* **<u>`plt.plot(x, y, color=..., linestyle=..., marker=...)`**: 선 그래프(Line Plot) 작성
+* **`plt.scatter(x, y, s=..., c=..., alpha=...)`**: 산점도(Scatter Plot) 작성 (점 크기 및 색상 지정 가능)</u>
 * **`plt.bar(x, height)` / `plt.barh(y, width)`**: 수직 / 수평 막대 그래프(Bar Chart) 작성
 * **`plt.hist(x, bins=...)`**: 히스토그램(Histogram) 작성 (구간 수 지정 가능)
 * **`plt.boxplot(x)`**: 상자 수염 그림(Box Plot) 작성 (이상치 및 사분위수 확인)
@@ -290,8 +294,8 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 
 ## 4. 스타일, 범례 및 주석 추가 (Styling, Legend & Annotation)
 
-* **`plt.legend(loc='best')`**: 범례(Legend) 표시 및 위치 지정
-* **`plt.grid(True, linestyle=...)`**: 그래프 격자선(Grid) 표시 여부 설정
+* **<u>`plt.legend(loc='best')`**: 범례(Legend) 표시 및 위치 지정 / 기본값은 자동 배치 - 데이터들을 가장 덜 가리는 곳
+* **`plt.grid(True, linestyle=...)`**: 그래프 격자선(Grid) 표시 여부 설정</u>
 * **`plt.axhline(y=0)` / `plt.axvline(x=0)`**: 수평선 / 수직선 추가 (기준선 표시용)
 * **`plt.axhspan()` / `plt.axvspan()`**: 특정 수평 / 수직 구간에 배경색 칠하기
 * **`plt.text(x, y, 'text')`**: 지정한 좌표에 텍스트 주석 추가
@@ -302,9 +306,195 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 
 ## 5. 출력 및 저장 (Output & File Saving)
 
-* **`plt.show()`**: 생성한 그래프를 화면에 출력 (스크립트 실행 시 팝업 또는 출력창 표출)
+* **<u>`plt.show()`**: 생성한 그래프를 화면에 출력 - 사실 안 써도 출력은 해주는데, 쓰면 깔끔하게 출력</u>
 * **`plt.savefig('filename.png', dpi=300, bbox_inches='tight')`**: 그래프를 이미지 파일(PNG, PDF 등)로 저장
 * **`plt.clf()` / `plt.cla()`**: 현재 Figure의 모든 내용 삭제 / 현재 Axes의 내용 삭제
 * **`plt.close()`**: 생성된 Figure 창을 닫고 메모리 해제
+
+
+---
+---
+
+
+# Scikit-Learn 주요 메서드 및 클래스 정리 (단계별/기능별)
+* 전처리부터 머신러닝 모델 구축 및 평가까지의 전 과정 구현 - 싸이킷 런은 머신러닝 특화 / 파이토치는 딥러닝 특화
+
+## 1. 데이터 전처리 및 변환 (Data Preprocessing & Feature Engineering)
+
+데이터 표준화, 인코딩, 결측치 처리 등을 수행합니다.
+
+* **<u>`StandardScaler()`**: 데이터의 평균을 0, 표준편차를 1로 변환하는 표준화(Standardization) 수행</u>
+* **<u>`fit(x)`**: 데이터 x의 평균과 표준편차를 구해서 저장 / 인자를 2개 넣으면 회귀 함수 찾기용</u>
+* **`MinMaxScaler()`**: 데이터를 지정한 범위(기본값 [0, 1]) 내로 압축하는 정규화(Normalization) 수행
+* **`RobustScaler()`**: 중앙값과 IQR(사분위수 범위)을 활용해 이상치(Outlier)에 강건한 스케일링 수행
+* **`LabelEncoder()`**: 범주형 타겟 레이블을 정수형 숫자로 변환 (`fit_transform()`, `inverse_transform()`)
+* **`OneHotEncoder()`**: 범주형 특성을 더미 변수(One-Hot Vector)로 변환
+* **`SimpleImputer(strategy='mean')`**: 결측치(NaN)를 평균, 중앙값, 최빈값 등으로 대체
+* **`PolynomialFeatures(degree=2)`**: 다항식 및 교차작용 특성을 생성하여 차원 확장
+
+---
+
+## 2. 데이터 분할 및 교차 검증 (Data Splitting & Cross-Validation)
+
+학습용 및 검증용 데이터를 분할하고 모델 평가 프레임을 제공합니다.
+
+* **`train_test_split(X, y, test_size=0.2, stratify=y)`**: 데이터를 학습용/평가용 세트로 분할
+* **`KFold(n_splits=5, shuffle=True)`**: 데이터셋을 K개로 나누어 교차 검증 수행
+* **`StratifiedKFold(n_splits=5)`**: 클래스 비율을 유지하며 K-겹 교차 검증 수행 (불균형 데이터용)
+* **`cross_val_score(estimator, X, y, cv=5)`**: 지정한 모델 및 교차 검증 기준에 맞춰 평가 점수 리스트 반환
+
+---
+
+## 3. 슈퍼바이저 알고리즘 (Supervised Learning Algorithms)
+
+### 3.1 회귀 모델 (Regression)
+* **<u style="text-decoration: underline red 2px;">`.fit(x, y)`**: x, y로 학습해 정규방정식을 이용해 최적의 함수 방정식을 찾아줌 / 인자를 하나만 넣으면 전처리용</u>
+* **<u>`.predict()`**: fit로 찾은 최적의 패턴에 ()의 값을 대입하여 결과를 도출 / ex) y_hat = model.predict(X)</u>
+
+* **`LinearRegression()`**: 기본 선형 회귀 알고리즘
+* **`Ridge(alpha=1.0)`**: L2 규제(Regularization)가 적용된 선형 회귀
+* **`Lasso(alpha=1.0)`**: L1 규제가 적용되어 불필요한 특성을 0으로 만드는 회귀
+
+### 3.2 분류 모델 (Classification)
+* **<u>`.predict_proba()`**: 예측 결과가 아니라 예측 확률값을 반환 </u>
+* **`LogisticRegression()`**: 로지스틱 회귀 기반 이진/다중 분류 모델
+* **`KNeighborsClassifier(n_neighbors=5)`**: K-최근접 이웃 알고리즘 기반 분류기
+* **`SVC(kernel='rbf', C=1.0)`**: 서포트 벡터 머신(SVM) 분류기
+
+### 3.3 트리 및 앙상블 모델 (Trees & Ensembles)
+* **`DecisionTreeClassifier()` / `DecisionTreeRegressor()`**: 의사결정나무 모델
+* **`RandomForestClassifier()` / `RandomForestRegressor()`**: 배깅(Bagging) 기반 랜덤 포레스트 앙상블
+* **`GradientBoostingClassifier()` / `GradientBoostingRegressor()`**: 그래디언트 부스팅(GBM) 앙상블
+* **`VotingClassifier(estimators=[...])`**: 여러 모델의 예측을 투표 방식으로 결합하는 보팅 앙상블
+
+### predict의 사용 
+* 모델의 종류에 따라 반환되는 값의 형태가 달라짐
+* 회귀 모델 : 연속된 수치(숫자)를 반환 (예: 식사 금액에 따른 예상 팁 금액)
+* 분류 모델 : 데이터가 속할 클래스(범주/라벨)를 반환 (예: 0 또는 1, '합격' 또는 '불합격')
+* &emsp;predict_proba는 확률을 반환
+---
+
+## 4. 비지도 학습 및 차원 축소 (Unsupervised Learning & Dimensionality Reduction)
+
+군집화(Clustering) 및 데이터 차원 축소를 수행합니다.
+
+* **`KMeans(n_clusters=3)`**: K-평균 군집화 알고리즘
+* **`DBSCAN(eps=0.5, min_samples=5)`**: 밀도 기반 군집화 알고리즘 (이상치 탐지 가능)
+* **`PCA(n_components=2)`**: 주성분 분석을 통한 차원 축소 (분산 보존)
+* **`TSNE(n_components=2)`**: 고차원 데이터를 2/3차원으로 시각화하기 위한 차원 축소
+
+---
+
+## 5. 하이퍼파라미터 튜닝 및 파이프라인 (Hyperparameter Tuning & Pipeline)
+
+모델 최적화 및 작업 흐름 관리 도구입니다.
+
+* **`GridSearchCV(estimator, param_grid, cv=5)`**: 지정한 파라미터 조합을 전수 조사하여 최적 파라미터탐색
+* **`RandomizedSearchCV(estimator, param_distributions, n_iter=10)`**: 지정 범위 내 파라미터를 무작위로 추출하여 탐색
+* **`Pipeline([('scaler', StandardScaler()), ('model', Ridge())])`**: 전처리-모델링 과정을 단일 객체로 연결하여 워크플로우 캡슐화
+* **`make_pipeline()`**: 이름 지정 없이 객체 순서대로 간단하게 파이프라인 생성
+
+---
+
+## 6. 모델 평가 지표 (Evaluation Metrics - `sklearn.metrics`)
+
+예측 성능을 정량적으로 측정합니다.
+
+### 6.1 회귀 평가 지표
+* **`mean_squared_error(y_true, y_pred)`**: 평균 제곱 오차 (MSE) 계산
+* **`mean_absolute_error(y_true, y_pred)`**: 평균 절대 오차 (MAE) 계산
+* **`r2_score(y_true, y_pred)`**: 결정 계수 ($R^2$ Score) 계산
+
+### 6.2 분류 평가 지표
+* **`accuracy_score(y_true, y_pred)`**: 정확도(Accuracy) 측정
+* **`precision_score()` / `recall_score()` / `f1_score()`**: 정밀도, 재현율, F1-점수 측정
+* **`confusion_matrix(y_true, y_pred)`**: 혼동 행렬(Confusion Matrix) 생성
+* **`classification_report(y_true, y_pred)`**: 주요 분류 지표 일괄 리포트 출력
+* **`roc_auc_score(y_true, y_score)`**: ROC 곡선의 밑면적(AUC) 점수 계산
+
+
+---
+---
+
+
+# PyTorch 주요 모듈 및 메서드 정리 (단계별/기능별)
+* 딥러닝 및 인공지능 모델 개발 - 싸이킷 런은 머신러닝 특화 / 파이토치는 딥러닝 특화 / 활용법은 Numpy와 차부뚜어
+
+## 1. 텐서 생성 및 기본 연산 (Tensor Creation & Operations)
+
+PyTorch의 기본 데이터 구조인 텐서(Tensor)를 생성하고 가공합니다.
+
+* **<u>`torch.tensor(data)`**: 파이썬 리스트나 NumPy 배열로부터 텐서 생성 - CPU 뿐만 아니라 GPU로도 계산 가능한 배열</u>
+* **`torch.zeros(shape)` / `torch.ones(shape)`**: 0 또는 1로 채워진 텐서 생성
+* **`torch.arange(start, end, step)`**: 연속된 숫자로 구성된 텐서 생성
+* **`torch.from_numpy(ndarray)`**: NumPy 배열을 텐서로 변환 (메모리 공유)
+* **`tensor.numpy()`**: PyTorch 텐서를 NumPy 배열로 변환
+* **`tensor.to(device)`**: 텐서를 연산 장치(`'cpu'` 또는 `'cuda'`)로 이동
+* **`tensor.reshape(*shape)` / `tensor.view(*shape)`**: 텐서의 형태(Shape) 변경 (`view`는 메모리 연속성 요구)
+* **`tensor.squeeze()` / `tensor.unsqueeze(dim)`**: 크기가 1인 차원 제거 또는 특정 위치에 차원 추가
+* **`torch.cat(tensors, dim=0)`**: 지정한 차원을 기준으로 여러 텐서 결합
+
+---
+
+## 2. 데이터 처리 및 로더 (Data Loading & Preprocessing - `torch.utils.data`)
+
+대용량 데이터를 효율적으로 관리하고 학습에 배치 단위로 공급합니다.
+
+* **`Dataset`**: 커스텀 데이터셋을 정의하기 위한 기본 클래스 (`__len__`, `__getitem__` 구현)
+* **`TensorDataset(*tensors)`**: 여러 텐서(입력 X, 타겟 y)를 하나로 묶어주는 기본 데이터셋
+* **`DataLoader(dataset, batch_size=32, shuffle=True)`**: 배치 생성, 데이터 셔플, 다중 프로세스 로딩을 자동화
+
+---
+
+## 3. 신경망 구축 모듈 (Neural Network Building - `torch.nn`)
+
+딥러닝 모델 레이어를 구성하는 핵심 클래스입니다.
+
+* **`nn.Module`**: 모든 신경망 모델의 기본 클래스 (`__init__`에서 레이어 정의, `forward()`에서 순전파 정의)
+* **`nn.Sequential(*args)`**: 레이어를 순차적으로 엮어 직관적으로 신경망 구성
+* **`nn.Linear(in_features, out_features)`**: 전결합층(Fully-Connected Layer / Linear Layer) 생성
+* **`nn.Conv2d(in_channels, out_channels, kernel_size)`**: 2차원 합성곱(Convolutional) 레이어 (이미지 처리)
+* **`nn.MaxPool2d(kernel_size)` / `nn.AvgPool2d(kernel_size)`**: 2차원 풀링 레이어
+* **`nn.Dropout(p=0.5)`**: 과적합 방지를 위한 드롭아웃 레이어
+* **`nn.BatchNorm2d(num_features)`**: 배치 정규화(Batch Normalization) 레이어
+* **`nn.ReLU()` / `nn.Sigmoid()` / `nn.Softmax(dim=1)`**: 활성화 함수(Activation Functions)
+
+---
+
+## 4. 손실 함수 (Loss Functions - `torch.nn`)
+
+모델의 예측값과 실제 정답 사이의 오차를 측정합니다.
+
+* **`nn.MSELoss()`**: 회귀(Regression)용 평균 제곱 오차 손실 함수
+* **`nn.CrossEntropyLoss()`**: 다중 클래스 분류(Classification)용 손실 함수 (Softmax 내장)
+* **`nn.BCEWithLogitsLoss()`**: 이진 분류(Binary Classification)용 손실 함수 (Sigmoid 내장)
+
+---
+
+## 5. 최적화 알고리즘 (Optimization - `torch.optim`)
+
+역전파를 통해 구한 경사(Gradient)로 모델 파라미터(가중치)를 업데이트합니다.
+
+* **`optim.SGD(model.parameters(), lr=0.01)`**: 확률적 경사 하강법 최적화
+* **`optim.Adam(model.parameters(), lr=0.001)`**: 모멘텀과 RMSProp을 결합한 보편적 최적화 알고리즘
+* **`optim.AdamW(model.parameters(), lr=0.001)`**: Adam에 가중치 감쇠(Weight Decay)를 정확히 적용한 변형 (LLM/트랜스포머에 자주 사용)
+* **`optimizer.zero_grad()`**: 이전 단계에서 누적된 파라미터의 경사도(Gradient) 초기화
+* **`optimizer.step()`**: 계산된 경사도를 기반으로 모델 파라미터 업데이트
+
+---
+
+## 6. 자동 미분 및 학습 흐름 제어 (Autograd & Training Loop)
+
+모델 학습 및 평가의 루프 과정 제어 도구입니다.
+
+* **`loss.backward()`**: 손실(Loss)에 대한 모델 파라미터의 경사도 자동 계산 (역전파)
+* **`torch.no_grad()`**: 경사도 계산을 비활성화하는 컨텍스트 매니저 (평가/인퍼런스 시 메모리 및 속도 최적화)
+* **`model.train()`**: 모델을 학습 모드로 전환 (Dropout, BatchNorm 등의 동작 활성화)
+* **`model.eval()`**: 모델을 평가 모드로 전환 (Dropout, BatchNorm 등의 동작 고정)
+* **`torch.save(model.state_dict(), 'path.pth')`**: 모델의 가중치(파라미터) 저장
+* **`model.load_state_dict(torch.load('path.pth'))`**: 저장된 가중치를 모델에 불러오기
+
+
+
 
 <div>
