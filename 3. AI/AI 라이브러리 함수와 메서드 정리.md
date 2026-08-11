@@ -495,7 +495,95 @@ PyTorch의 기본 데이터 구조인 텐서(Tensor)를 생성하고 가공합�
 * **`torch.save(model.state_dict(), 'path.pth')`**: 모델의 가중치(파라미터) 저장
 * **`model.load_state_dict(torch.load('path.pth'))`**: 저장된 가중치를 모델에 불러오기
 
+---
+---
 
+# Hugging Face 핵심 모듈 및 함수 정리 (핵심 가이드)
+* AI 모델, 데이터셋, 스페이스 등을 파이썬 코드로 제어하고 관리하는 라이브러리 
 
+## 1. 파이프라인 & 모델 로딩 (`transformers`)
+
+가장 기본적이고 자주 쓰이는 모델 구축 및 실행 함수입니다.
+
+* **`pipeline(task, model=...)`**: 번역, 감정분석, 텍스트 생성 등 AI 작업을 한 줄 코드로 바로 실행
+* **`AutoTokenizer.from_pretrained(model_id)`**: 텍스트를 모델 입력용 토큰(숫자)으로 변환하는 토크나이저 로드
+* **`AutoModel.from_pretrained(model_id)`**: 사전 학습된 기본 모델 가중치 로드
+* **`AutoModelForCausalLM.from_pretrained(...)`**: 텍스트 생성(LLM) 전용 모델 로드
+* **`AutoModelForSequenceClassification.from_pretrained(...)`**: 텍스트 분류 전용 모델 로드
+
+---
+
+## 2. 데이터셋 관리 (`datasets`)
+
+허깅페이스 허브의 공개 데이터셋을 불러오고 전처리합니다.
+
+* **`load_dataset(path, name)`**: 허브에 올려진 데이터셋을 곧바로 로드
+* **`dataset.map(function)`**: 데이터셋 전체에 토큰화 등 전처리 함수를 일괄 적용
+
+---
+
+## 3. 모델 학습 및 파인튜닝 (`transformers`)
+
+가져온 사전 학습 모델을 내 데이터셋으로 재학습(Fine-tuning)시킵니다.
+
+* **`TrainingArguments(output_dir, num_train_epochs, lr, ...)`**: 학습율, 배치 크기 등 학습 하이퍼파라미터 설정
+* **`Trainer(model, args, train_dataset, eval_dataset, ...)`**: 학습/평가 루프를 자동으로 처리해주는 고성능 학습기
+
+---
+
+## 4. 허브 및 API 연동 (`huggingface_hub`)
+
+허깅페이스 클라우드 서비스와 계정을 연동합니다.
+
+* **`login(token=...)` / `notebook_login()`**: 비공개 모델 접근 및 내 모델 업로드를 위한 API 토큰 인증
+* **`InferenceClient(model=...)`**: 모델을 다운로드하지 않고 클라우드 API를 호출해 빠른 예측 수행
+
+---
+---
+
+# Transformers 주요 모듈 및 클래스 정리 (기능별)
+* 사전 학습 AI 모델을 다룰 수 있는 라이브러리 
+
+## 1. 파이프라인 및 고수준 추론 (Pipeline & High-Level Inference)
+
+* **`pipeline(task, model=...)`**: 번역, 요약, 텍스트 생성, 감정 분석 등 다양한 AI 작업을 단 한 줄로 수행하는 고수준 API
+
+---
+
+## 2. 자동 클래스 및 로더 (AutoClasses & Model Loaders)
+
+* **`AutoTokenizer.from_pretrained(model_id)`**: 모델 이름만으로 호환되는 토크나이저 자동 로드
+* **`AutoModel.from_pretrained(model_id)`**: 기본 뼈대(Backbone) 사전 학습 모델 로드
+* **`AutoModelForCausalLM.from_pretrained(model_id)`**: 텍스트 생성(LLM) 전용 인과적 언어 모델 로드
+* **`AutoModelForSequenceClassification.from_pretrained(model_id)`**: 텍스트 분류 전용 모델 로드
+* **`AutoConfig.from_pretrained(model_id)`**: 모델의 구조 및 하이퍼파라미터 설정 정보(Config) 로드
+
+---
+
+## 3. 토크나이저 및 텍스트 전처리 (Tokenizer & Preprocessing)
+
+* **`tokenizer(text, padding=True, truncation=True, return_tensors='pt')`**: 텍스트를 모델 입력 형태(텐서)로 변환
+* **`tokenizer.decode(token_ids)`**: 토큰 ID(숫자)를 사람이 읽을 수 있는 텍스트로 복원
+* **`tokenizer.batch_decode(sequences)`**: 배치 형태의 여러 토큰 ID 리스트를 텍스트로 일괄 복원
+
+---
+
+## 4. 텍스트 생성 및 추론 제어 (Generation Options)
+
+* **`model.generate(input_ids, max_new_tokens=..., temperature=...)`**: LLM 텍스트 생성 제어 (생성 길이, 무작위성 등 설정)
+* **`DataCollatorWithPadding(tokenizer)`**: 배치 단위로 데이터 패딩을 동적으로 적용하는 데이터 컬레이터
+
+---
+
+## 5. 모델 파인튜닝 및 학습 (Fine-Tuning & Trainer)
+
+* **`TrainingArguments(output_dir, learning_rate, num_train_epochs, ...)`**: 학습율, 배치 크기 등 학습용 설정 정의
+* **`Trainer(model, args, train_dataset, eval_dataset, ...)`**: PyTorch 학습/평가 루프를 자동화하는 고성능 래퍼 클래스
+
+---
+
+## 6. 경량화 및 양자화 설정 (Quantization Configuration)
+
+* **`BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_compute_dtype=...)`**: 4비트/8비트 양자화를 이용해 적은 GPU 메모리로 대형 모델 로드 설정
 
 <div>
