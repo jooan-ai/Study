@@ -95,8 +95,8 @@
 
 * **<u>`df.head(n)` / `df.tail(n)`**: 상위 / 하위 `n`개 행 확인 (기본값 5)
 * **`df.sample(n)`**: 무작위로 `n`개 행 샘플링
-* **`df.info()`**: 데이터프레임의 행/열 개수, 컬럼명, 데이터 타입, 결측치 수 요약 출력
-* **<u>`df.describe()`**: 수치형 컬럼의 기술통계량(개수, 평균, 표준편차, 사분위수 등) 계산</u> 
+* **<u style="text-decoration: underline red 2px;">`df.info()`**: 데이터프레임의 행/열 개수, 컬럼명, 데이터 타입, 결측치 수 요약 출력
+* **`df.describe()`**: 수치형 컬럼의 기술통계량(개수, 평균, 표준편차, 사분위수 등) 계산</u> 
 * **`df.dtypes`**: 각 컬럼의 데이터 타입 반환 (속성)
 * **`df.shape`**: 행과 열의 크기를 튜플 `(rows, cols)` 형태로 반환 (속성)
 * **`df.columns` / `df.index`**: 컬럼명 목록 / 행 인덱스 정보 반환 (속성)
@@ -141,7 +141,7 @@
 * **`s.map(dict_or_func)`**: 시리즈의 각 요소에 딕셔너리 매핑 또는 함수 적용
 * **`df.map(func)`**: 데이터프레임 전체의 모든 원소에 함수 적용 (Pandas 2.1+ / 구 `applymap`)
 * **<u>`df.drop(labels', axis=1)`**: 지정한 행 또는 열 삭제
-* **`df.corr(numeric_only=True)`**: 칼럼들 간의 상관계수를 계산 / numeric_only=True - 문자열 등은 제외하고 숫자로 이루어진 칼럼들만 선택 / 상관계수 - 각 칼럼 간에 얼마나 밀첩한 상관관계가 있는지 -1부터 1까지의 수로 나타낸 것, 히트맵 그릴 때 자주 사용</u>
+* **`df.corr(numeric_only=True)`**: 칼럼들 간의 상관계수를 계산 / numeric_only=True - 문자열 등은 제외하고 숫자로 이루어진 칼럼들만 선택 / 상관계수 - 각 칼럼 간에 얼마나 밀첩한 상관관계가 있는지 -1부터 1까지의 수로 나타낸 것, 0에서 멀어질수록 상관도가 높음, 히트맵 그릴 때 자주 사용</u>
 * **`df.sort_values(by='col', ascending=True)`**: 특정 컬럼 기준 값 정렬
 * **`df.sort_index()`**: 인덱스 기준으로 정렬
 * **`df.set_index('col')`**: 특정 컬럼을 행 인덱스로 지정
@@ -250,7 +250,7 @@ ightarrow$ 월별, 연도별 등 단위 변환 및 집계)
 * **`sns.set_style('whitegrid')`**: 배경 격자 스타일 설정
 * **`sns.set_palette('pastel'|'husl'|'Set2')`**: 기본 색상 팔레트 설정
 * **`sns.color_palette()`**: 현재 또는 지정한 팔레트의 RGB 색상 리스트 반환 / 확인
-* **<u>`sns.load_dataset('dataset_name')`**: Seaborn 온라인 예제 데이터셋(예: `'iris'`, `'titanic'`, `'tips'`) 불러오기</u>
+* **<u style="text-decoration: underline red 2px;">`sns.load_dataset('dataset_name')`**: Seaborn 온라인 예제 데이터셋(예: `'iris'`, `'titanic'`, `'tips'`) 불러오기</u>
 
 
 ---
