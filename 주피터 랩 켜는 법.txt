@@ -1,0 +1,13 @@
+주피터랩
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m jupyter lab 
+
+도커 
+docker compose up -d
+http://localhost:8888
+
+ 랭스미스
+source venv/Scripts/activate
+export PYTHONUTF8=1 
+langgraph dev
